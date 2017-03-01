@@ -4,11 +4,15 @@ import re
 import os
 import time
 
+#Requires a praw bot to be set up
 r = praw.Reddit('bot1')
 
+USERNAME = "YourUsernameHere" #Change this to your username obviously
+
+#Change the subreddit if you like
 subreddit = r.subreddit("drama")
 
-index = 10
+index = 0
 
 data = ["Try going for a jog! That might help you get all that built-up madness out of your system.",
         "You could listen to music. Lots of people listen to music when they're mad. ",
@@ -32,7 +36,7 @@ data = ["Try going for a jog! That might help you get all that built-up madness 
         "https://www.youtube.com/watch?v=T8kt22TH_c4",
         "https://www.youtube.com/watch?v=lhF8iDJIM_M",
         "When people run in circles, it's a very very mad world. Or in your case, a very angry Redditor!",
-        "https://www.youtube.com/watch?v=bnam9hljQDQ"]
+        "https://www.youtube.com/watch?v=bnam9hljQDQ"] #Add your own auto-replies if you want
 
 if not os.path.isfile("posts_replied_to.txt"):
     posts_replied_to = []
@@ -49,7 +53,7 @@ while(1==1):
     try:
         for comment in subreddit.stream.comments():
             print comment.body + "\n"
-            if comment.id not in posts_replied_to and comment.author != "PoorLilMarco" and  ((comment.parent().author == "PoorLilMarco") or (comment.submission.author == "PoorLilMarco")):
+            if comment.id not in posts_replied_to and comment.author != USERNAME and  ((comment.parent().author == USERNAME) or (comment.submission.author == USERNAME)):
                 c = data[index]
                 posts_replied_to.append(comment.id)
                 print "Going to reply to " + str(comment.author) + " with '" + c + "' in 10 seconds\n"
@@ -66,5 +70,5 @@ while(1==1):
                 else:
                     index += 1               
     except:
-        print "Uh-oh, spaghetti-Os"
-        time.sleep(30)
+        print "Lost connection to stream. Re-connecting in 10..."
+        time.sleep(10)
